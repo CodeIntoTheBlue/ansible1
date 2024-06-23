@@ -1,0 +1,7 @@
+---
+- name: Test SSH connection
+  hosts: LinuxSlaves
+  gather_facts: false
+  tasks:
+    - name: Run a simple command
+      command: echo "Hello, World!"
