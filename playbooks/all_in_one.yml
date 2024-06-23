@@ -1,5 +1,7 @@
 - hosts: all
   become: true
+  vars_files:
+    - vars.yml
   pre_tasks:
     - name: update repo cache (CentOS)
       tags: always
@@ -17,6 +19,8 @@
 
 - hosts: web_servers
   become: true
+  vars_files:
+    - vars.yml
   tasks:
     - name: install apache2 and php packages on Ubuntu
       tags: apache, apache2, php, ubuntu
@@ -39,6 +43,8 @@
 
 - hosts: all
   become: true
+  vars_files:
+    - vars.yml
   tasks:
     - name: add ssh-key for simone
       tags: always
@@ -81,6 +87,8 @@
 
 - hosts: workstations
   become: true
+  vars_files:
+    - vars.yml 
   tasks:
     - name: install unzip
       package:
@@ -97,6 +105,8 @@
 
 - hosts: db_servers
   become: true
+  vars_files:
+    - vars.yml
   tasks:
     - name: install mariadb package (CentOS)
       tags: db, mariadb, CentOS
