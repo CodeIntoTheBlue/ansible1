@@ -1,0 +1,6 @@
+---
+- name: Ping LinuxSlaves
+  hosts: LinuxSlaves
+  tasks:
+    - name: Ping
+      ping:
