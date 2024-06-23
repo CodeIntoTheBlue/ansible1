@@ -1,0 +1,36 @@
+---
+- hosts: windows_clients
+  tasks:
+    - name: Install OpenSSH
+      win_feature:
+        name:
+          - OpenSSH-Client
+          - OpenSSH-Server
+        state: present
+
+    - name: Start and configure SSH service
+      win_service:
+        name: sshd
+        start_mode: auto
+        state: started
+
+    - name: Configure WinRM
+      win_shell: |
+        $url = "https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $webClient = New-Object System.Net.WebClient
+        $webClient.DownloadFile($url, "$env:temp\ConfigureRemotingForAnsible.ps1")
+        powershell.exe -ExecutionPolicy ByPass -File $env:temp\ConfigureRemotingForAnsible.ps1
+
+    - name: Create Ansible user
+      win_user:
+        name: ansible
+        password: StrongPassword123!
+        groups:
+          - Administrators
+        state: present
+
+    - name: Set up authorized keys for Ansible user
+      win_authorized_key:
+        user: ansible
+        key: "{{ lookup('file', '/home/ansible/.ssh/ansible.pub') }}"

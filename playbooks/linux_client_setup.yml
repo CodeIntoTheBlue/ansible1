@@ -1,0 +1,43 @@
+---
+- hosts: linux_servers
+  become: true
+  tasks:
+    - name: Update and upgrade apt packages
+      apt:
+        upgrade: yes
+        update_cache: yes
+
+    - name: Install OpenSSH Server
+      apt:
+        name: openssh-server
+        state: present
+
+    - name: Configure SSH for public key authentication
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?PubkeyAuthentication'
+        line: 'PubkeyAuthentication yes'
+      notify: Restart SSH
+
+    - name: Create Ansible user
+      user:
+        name: ansible
+        groups: sudo
+        shell: /bin/bash
+
+    - name: Set up sudo rights for Ansible user
+      copy:
+        content: "ansible ALL=(ALL) NOPASSWD: ALL"
+        dest: /etc/sudoers.d/ansible
+        mode: '0440'
+
+    - name: Set up authorized keys for Ansible user
+      authorized_key:
+        user: ansible
+        key: "{{ lookup('file', '/home/ansible/.ssh/ansible.pub') }}"
+
+  handlers:
+    - name: Restart SSH
+      service:
+        name: sshd
+        state: restarted

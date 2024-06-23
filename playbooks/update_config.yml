@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Update configuration file
+      copy:
+        content: "{{ config | to_nice_json }}"
+        dest: config.json
+      vars:
+        config:
+          master_server: "{{ master_ip }}"
+          linux_servers: "{{ linux_servers.split() }}"
+          windows_clients: "{{ windows_clients.split() }}"

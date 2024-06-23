@@ -1,0 +1,50 @@
+---
+- hosts: localhost
+  become: true
+  vars_files:
+    - config.json
+  tasks:
+    - name: Set up Semaphore service
+      template:
+        src: semaphore.service.j2
+        dest: /etc/systemd/system/semaphore.service
+      notify:
+        - Reload systemd
+        - Restart Semaphore
+
+    - name: Configure NGINX for Semaphore
+      template:
+        src: nginx_semaphore.conf.j2
+        dest: /etc/nginx/sites-available/semaphore.conf
+      notify:
+        - Reload NGINX
+
+    - name: Enable Semaphore NGINX config
+      file:
+        src: /etc/nginx/sites-available/semaphore.conf
+        dest: /etc/nginx/sites-enabled/semaphore.conf
+        state: link
+      notify:
+        - Reload NGINX
+
+    - name: Remove default NGINX config
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify:
+        - Reload NGINX
+
+  handlers:
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
+
+    - name: Restart Semaphore
+      systemd:
+        name: semaphore
+        state: restarted
+
+    - name: Reload NGINX
+      systemd:
+        name: nginx
+        state: reloaded
