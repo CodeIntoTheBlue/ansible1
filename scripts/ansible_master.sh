@@ -575,7 +575,7 @@ sudo semaphore setup
 # no no no
 
 #username janina
-#email janinahc@outlook.com
+#email janina@ansible.com
 
 
 
