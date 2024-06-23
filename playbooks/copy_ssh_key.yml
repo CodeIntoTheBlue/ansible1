@@ -2,6 +2,8 @@
 - name: Copy SSH public key to LinuxSlaves
   hosts: LinuxSlaves
   become: true
+  vars_files:
+    - vars.yml
   tasks:
     - name: Ensure .ssh directory exists for ansible_user
       file:
