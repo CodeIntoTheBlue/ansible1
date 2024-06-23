@@ -1,6 +1,7 @@
 ---
 - name: Ping LinuxSlaves
   hosts: LinuxSlaves
+  gather_facts: false
   tasks:
     - name: Ping
       ping:
