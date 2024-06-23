@@ -5,26 +5,26 @@
   tasks:
     - name: Ensure .ssh directory exists for ansible_user
       file:
-        path: /home/{{ ansible_user }}/.ssh
+        path: /home/janina/.ssh
         state: directory
-        mode: '0700'
+        mode: "0700"
 
     - name: Copy SSH public key to authorized_keys for ansible_user
       copy:
         src: /home/janina/.ssh/janina.pub
-        dest: /home/{{ ansible_user }}/.ssh/authorized_keys
-        mode: '0644'
+        dest: /home/janina/.ssh/authorized_keys
+        mode: "0644"
         append: yes
 
     - name: Ensure .ssh directory exists for janina
       file:
         path: /home/janina/.ssh
         state: directory
-        mode: '0700'
+        mode: "0700"
 
     - name: Copy SSH public key to authorized_keys for janina
       copy:
         src: /home/janina/.ssh/ansible.pub
         dest: /home/janina/.ssh/authorized_keys
-        mode: '0644'
+        mode: "0644"
         append: yes
