@@ -1,13 +1,16 @@
-[Master]
+# inventory
+
+[linux_master]
 192.168.178.78
 
-[WinSlaves]
+[windows_clients]
 192.168.178.74
 192.168.178.75
+192.168.178.79
 
-[LinuxSlaves]
+[linux_servers]
 192.168.178.71
 192.168.178.72
 
-[Tiny11]
-192.168.178.79
+[all:vars]
+ansible_user=ansible

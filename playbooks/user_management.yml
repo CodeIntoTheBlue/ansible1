@@ -2,23 +2,19 @@
 - hosts: all
   become: true
   tasks:
-
     - name: create simone user
-      tags: always
       user:
         name: simone
         groups: root
 
     - name: add ssh-key for simone
-      tags: always
       authorized_key:
          user: simone
          key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN3inf5BR5TmRphZZMvwuT8J4VpRYSQZUExa0grred51 ansible"
 
     - name: add sudoers file for simone
-      tags: always
       copy:
-        src: sudoer_simone
+        content: "simone ALL=(ALL) NOPASSWD: ALL"
         dest: /etc/sudoers.d/simone
         owner: root
         group: root
