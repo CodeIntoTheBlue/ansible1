@@ -1,0 +1,15 @@
+- name: Test Windows task
+  hosts: windows_slaves
+  tasks:
+    - name: Create a test file
+      win_file:
+        path: C:\temp\test_file.txt
+        state: touch
+
+    - name: Get system information
+      win_command: systeminfo
+      register: system_info
+
+    - name: Display system information
+      debug:
+        var: system_info.stdout_lines

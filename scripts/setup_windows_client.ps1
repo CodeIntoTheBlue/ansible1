@@ -1,12 +1,22 @@
 # setup_windows_client.ps1
 
 # Read configuration
-$config = Get-Content -Raw -Path config.json | ConvertFrom-Json
-$windowsClients = $config.windows_clients
+#  $config = Get-Content -Raw -Path config.json | ConvertFrom-Json
+#  $windowsClients = $config.windows_clients
+
 
 # Install OpenSSH
 Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+
+# make sure updates are activated before you can install
 Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+
+
+# service angucken
+Get-WindowsCapability -Online | Where-Object Name -like '*OpenSSH.Server*' | Select-Object Name, State
+
+
+
 
 # Install OpenSSHUtils for key-based authentication
 Install-Module -Force OpenSSHUtils -Scope AllUsers
@@ -19,7 +29,7 @@ Set-Service -Name sshd -StartupType 'Automatic'
 New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
 
 # Configure WinRM for Ansible
-$url = "https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
+$url = "https://github.com/ansible/ansible-documentation/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
 $file = "$env:temp\ConfigureRemotingForAnsible.ps1"
 (New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
 powershell.exe -ExecutionPolicy ByPass -File $file

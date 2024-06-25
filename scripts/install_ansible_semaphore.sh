@@ -123,6 +123,12 @@ sudo systemctl start semaphore.service
 echo "semaphore ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/semaphore
 
 
+################################
+# Github konnte nicht astablished werden
+# key probleme?!
+
+
+
 # Run the Ansible playbook to complete setup
 ansible-playbook ~/ansible1/playbooks/master_setup.yml
 
